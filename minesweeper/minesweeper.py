@@ -116,7 +116,12 @@ class Sentence():
         """
         Returns the set of all cells in self.cells known to be safe.
         """
-        raise NotImplementedError
+        safe = set()
+        for cell in self.cells:
+            if not Minesweeper.is_mine(cell):
+                safe.add(cell)
+        return safe
+        # raise NotImplementedError
 
     def mark_mine(self, cell):
         """
