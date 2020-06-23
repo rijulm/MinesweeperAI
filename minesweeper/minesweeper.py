@@ -201,7 +201,13 @@ class MinesweeperAI():
         # mark the cell as safe
         self.mark_safe(cell)
 
-        self.knowledge.append(Sentence(cell, count))
+        neighbours = self.find_neighbours(cell)
+
+        # adding sentence with the neighbours - knows safes - already explored
+        self.knowledge.append(Sentence(neighbours - self.safes - self.moves_made, count))
+
+
+
 
         # raise NotImplementedError
 
@@ -224,3 +230,23 @@ class MinesweeperAI():
             2) are not known to be mines
         """
         raise NotImplementedError
+
+    def find_neighbours(self, cell):
+        x, y = cell
+        result = []
+        for i in range(x-1, x+2):
+            for j in range(y-1, y+2):
+
+                if (i, j) == cell:
+                    continue
+
+                if 0 <= i <= self.height and 0 <= j <= self.width:
+                    result.append((i,j))
+
+        return set(result)
+
+a = [1,2,3,4,5]
+b = [3,4]
+c = set([1])
+a = set(a)-  set(b) - c
+print(a)
