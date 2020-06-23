@@ -105,22 +105,16 @@ class Sentence():
         """
         Returns the set of all cells in self.cells known to be mines.
         """
-        mines = set()
-        for cell in self.cells:
-            if Minesweeper.is_mine(cell):
-                mines.add(cell)
-        return mines
+        if len(self.cells) == self.count:
+            return self.cells
         # raise NotImplementedError
 
     def known_safes(self):
         """
         Returns the set of all cells in self.cells known to be safe.
         """
-        safe = set()
-        for cell in self.cells:
-            if not Minesweeper.is_mine(cell):
-                safe.add(cell)
-        return safe
+        if self.count == 0:
+            return self.cells
         # raise NotImplementedError
 
     def mark_mine(self, cell):
@@ -128,14 +122,23 @@ class Sentence():
         Updates internal knowledge representation given the fact that
         a cell is known to be a mine.
         """
-        raise NotImplementedError
+        # to check if cell in sentence, i think we check within the self.cells
+        if cell in self.cells:
+            self.cells.remove(cell)
+            self.count -= 1
+
+
+        # we dont change the number of count
+        # raise NotImplementedError
 
     def mark_safe(self, cell):
         """
         Updates internal knowledge representation given the fact that
         a cell is known to be safe.
         """
-        raise NotImplementedError
+        if cell in self.cells:
+            self.cells.remove(cell)
+        # raise NotImplementedError
 
 
 class MinesweeperAI():
@@ -192,7 +195,15 @@ class MinesweeperAI():
             5) add any new sentences to the AI's knowledge base
                if they can be inferred from existing knowledge
         """
-        raise NotImplementedError
+        # add to moves made
+        self.moves_made.add(cell)
+
+        # mark the cell as safe
+        self.mark_safe(cell)
+
+        self.knowledge.append(Sentence(cell, count))
+
+        # raise NotImplementedError
 
     def make_safe_move(self):
         """
