@@ -107,6 +107,7 @@ class Sentence():
         """
         if len(self.cells) == self.count:
             return self.cells
+        return set()
         # raise NotImplementedError
 
     def known_safes(self):
@@ -115,6 +116,7 @@ class Sentence():
         """
         if self.count == 0:
             return self.cells
+        return set()
         # raise NotImplementedError
 
     def mark_mine(self, cell):
@@ -206,7 +208,42 @@ class MinesweeperAI():
         # adding sentence with the neighbours - knows safes - already explored
         self.knowledge.append(Sentence(neighbours - self.safes - self.moves_made, count))
 
+        # going over current KB to update
+        for sentence in self.knowledge:
+            if len(sentence.cells == 0):
+                self.knowledge.remove(sentence)
 
+            else:
+                mines = sentence.known_mines()
+                safes = sentence.known_safes()
+                for cell in sentence.cells:
+                    if cell in mines:
+                        self.mark_mine(cell)
+                    if cell in safes:
+                        self.mark_safe(cell)
+
+        new_inferences = []
+
+        # select one sentence
+        for sentence in self.knowledge:
+            for sentence2 in self.knowledge:
+                if sentence == sentence2:
+                    continue
+                if len(sentence.cells) == 0 or len(sentence2.cells) == 0:
+                    continue
+                if sentence.count == 0 or sentence2.count == 0:
+                    continue
+
+                else:
+                    if (sentence.cells).issubset(sentence2.cells):
+                        new_inferences.append(Sentence( sentence2.cells - sentence.cells, sentence2.count - sentence.count))
+
+        self.knowledge += new_inferences
+
+        print("no. of sentences, safes, mines")
+        print(len(self.knowledge))
+        print(len(self.safes))
+        print(len(self.mines))
 
 
         # raise NotImplementedError
@@ -245,8 +282,6 @@ class MinesweeperAI():
 
         return set(result)
 
-a = [1,2,3,4,5]
-b = [3,4]
-c = set([1])
-a = set(a)-  set(b) - c
-print(a)
+a = {1,2,3,4,5}
+b = {2,3}
+print(b.issubset(a))
