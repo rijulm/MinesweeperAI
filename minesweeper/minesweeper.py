@@ -146,7 +146,7 @@ class Sentence():
         Updates internal knowledge representation given the fact that
         a cell is known to be safe.
         """
-
+        # needed to update the functions for final run so that a new set was generated every time
         if cell not in self.cells:
             return
 
