@@ -273,7 +273,17 @@ class MinesweeperAI():
             2) are not known to be mines
         """
 
+        possible_moves = []
+        for i in range(0, self.height):
+            for j in range(0, self.width):
+                move = (i, j)
+                if move not in self.mines and move not in self.moves_made:
+                    possible_moves.append(move)
 
+        if len(possible_moves) == 0:
+            return None
+        else:
+            return random.choice(possible_moves)
         # raise NotImplementedError
 
     def find_neighbours(self, cell):
