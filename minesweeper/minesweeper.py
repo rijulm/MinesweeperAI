@@ -124,23 +124,41 @@ class Sentence():
         Updates internal knowledge representation given the fact that
         a cell is known to be a mine.
         """
-        # to check if cell in sentence, i think we check within the self.cells
-        if cell in self.cells:
-            self.cells.remove(cell)
+        if cell not in self.cells:
+            return
+
+        updated = set()
+
+        for acell in self.cells:
+            if acell == cell:
+                continue
+            updated.add(acell)
+
+        self.cells = updated
+        if len(updated) == 0:
+            self.count = 0
+        else:
             self.count -= 1
-
-
-        # we dont change the number of count
-        # raise NotImplementedError
+        return
 
     def mark_safe(self, cell):
         """
         Updates internal knowledge representation given the fact that
         a cell is known to be safe.
         """
-        if cell in self.cells:
-            self.cells.remove(cell)
-        # raise NotImplementedError
+
+        if cell not in self.cells:
+            return
+
+        updated = set()
+
+        for acell in self.cells:
+            if acell == cell:
+                continue
+            updated.add(acell)
+
+        self.cells = updated
+        return
 
 
 class MinesweeperAI():
@@ -210,7 +228,11 @@ class MinesweeperAI():
 
         # going over current KB to update
         for sentence in self.knowledge:
-            if len(sentence.cells == 0):
+            print(sentence.cells)
+            print(sentence.count)
+
+            # empty sentence with no cells
+            if len(sentence.cells) == 0:
                 self.knowledge.remove(sentence)
 
             else:
@@ -236,7 +258,7 @@ class MinesweeperAI():
 
                 else:
                     if (sentence.cells).issubset(sentence2.cells):
-                        new_inferences.append(Sentence( sentence2.cells - sentence.cells, sentence2.count - sentence.count))
+                        new_inferences.append(Sentence( sentence2.cells.difference(sentence.cells), sentence2.count - sentence.count))
 
         self.knowledge += new_inferences
 
@@ -259,6 +281,7 @@ class MinesweeperAI():
         """
         for cell in self.safes:
             if cell not in self.safes:
+                print('made a safe move')
                 return cell
 
         return None
@@ -283,6 +306,7 @@ class MinesweeperAI():
         if len(possible_moves) == 0:
             return None
         else:
+            print('made a random move')
             return random.choice(possible_moves)
         # raise NotImplementedError
 
