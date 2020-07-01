@@ -127,15 +127,15 @@ class Sentence():
         if cell not in self.cells:
             return
 
-        updated = set()
+        new = set()
 
-        for acell in self.cells:
-            if acell == cell:
+        for cell1 in self.cells:
+            if cell1 == cell:
                 continue
-            updated.add(acell)
+            new.add(cell1)
 
-        self.cells = updated
-        if len(updated) == 0:
+        self.cells = new
+        if len(new) == 0:
             self.count = 0
         else:
             self.count -= 1
