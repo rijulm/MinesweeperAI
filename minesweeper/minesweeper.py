@@ -324,6 +324,3 @@ class MinesweeperAI():
 
         return set(result)
 
-a = {1,2,3,4,5}
-b = {2,3}
-print(b.issubset(a))
